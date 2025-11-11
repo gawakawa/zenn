@@ -15,7 +15,8 @@ signal という言葉を聞いたことはあったのですが、どんなも�
 ## SolidJS とは
 React や Vue.js のような JavaScript の Web フレームワークです (React はライブラリですが ) 。signal を用いたきめ細やかなリアクティビティを特徴としています。
 
-## Signal
+## SolidJS のりアクティビティ
+### Signal
 Solid のリアクティビティの根幹をなすものです。 React の state に使用感は近いですが、基本的には別物です ( signal は state よりさらに primitive な概念として捉えるのが良さそう？ ) 。`createSignal()` 関数によって作成され、`createSignale` が返す getter, setter によってアクセスや更新ができます。 React の `useState()` とは異なり、 1 つ目の返り値は関数であることに注意が必要です。
 
 ```ts
@@ -27,17 +28,62 @@ console.log(ocunt()); // 1 を返す
 
 ```
 
-## Subscribers
+### Effect
+Effect は、 signal の更新をトリガーとして実行される関数です。 React の Effect とはだいぶ違いますね。 `createEffect()` で登録することができます。
 
-## JSX
-Solid も React と同様 JSX を用います。
+```ts
+const [count, setCount] = createSignal(0);
+
+createEffect(() => {
+  console.log(count());
+});
+```
+
+### Subscriber
+subscriber は、 signal の変化を監視し、 signal が更新されたときに登録された処理をトリガーする役割を持ちます。
+
+### SolidJS のリアクティブシステム
+
+```ts
+let currentSubscriber = null;
+
+function createSignal(initialValue) {
+  let value = initialValue;
+  const subscribers = new Set();
+
+  function getter() {
+    if (currentSubscriber) {
+      subscribers.add(currentSubscriber);
+    }
+    return value;
+  }
+
+  function setter(newValue) {
+    if (value === newValue) return; // if the new value is not different, do not notify dependent effects and memos
+    value = newValue;
+    for (const subscriber of subscribers) {
+      subscriber(); //
+    }
+  }
+
+  return [getter, setter];
+}
+
+// creating an effect
+function createEffect(fn) {
+  const previousSubscriber = currentSubscriber; // Step 1
+  currentSubscriber = fn;
+  fn();
+  currentSubscriber = previousSubscriber;
+}
+```
 
 ## fine-grained reactivity
 Solid の大きな特徴はこの fine-grained reactivity です。
 
-## 同期的更新
+### 同期的更新
 
-## 非同期的更新
+### 非同期的更新
 
 ## 良いなと思ったところ
 - store に見られる fine-grained reactivity により、最小限の記述で必要最小限の変更を行える
