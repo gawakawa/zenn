@@ -13,10 +13,31 @@ SolidJS というフレームワークのチュートリアルを一通りさら
 signal という言葉を聞いたことはあったのですが、どんなものなのかよくわかっていなかったので、実際に signal を使ったコードを書いてみて理解を深めようと思いました。軽く調べた感じ、 signal を使うフレームワークは SolidJS の他にも preact や Qwik 等があるようでしたが、一番 signal を全面に押し出しているように見えたので SolidJS に決めました。
 
 ## SolidJS とは
+React や Vue.js のような JavaScript の Web フレームワークです (React はライブラリですが ) 。signal を用いたきめ細やかなリアクティビティを特徴としています。
 
 ## Signal
+Solid のリアクティビティの根幹をなすものです。 React の state に使用感は近いですが、基本的には別物です ( signal は state よりさらに primitive な概念として捉えるのが良さそう？ ) 。`createSignal()` 関数によって作成され、`createSignale` が返す getter, setter によってアクセスや更新ができます。 React の `useState()` とは異なり、 1 つ目の返り値は関数であることに注意が必要です。
+
+```ts
+const [count, setCound] = createSignal(0);
+
+console.log(count()); // 0 を返す
+setCound(1);          // signal の値を 1 に更新
+console.log(ocunt()); // 1 を返す
+
+```
+
+## Subscribers
+
+## JSX
+Solid も React と同様 JSX を用います。
 
 ## fine-grained reactivity
+Solid の大きな特徴はこの fine-grained reactivity です。
+
+## 同期的更新
+
+## 非同期的更新
 
 ## 良いなと思ったところ
 - store に見られる fine-grained reactivity により、最小限の記述で必要最小限の変更を行える
