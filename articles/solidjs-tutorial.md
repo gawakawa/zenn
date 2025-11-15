@@ -17,7 +17,9 @@ React や Vue.js のような JavaScript の Web フレームワークです (Re
 
 ## SolidJS のりアクティビティ
 ### Signal
-Solid のリアクティビティの根幹をなすものです。 React の state に使用感は近いですが、基本的には別物です ( signal は state よりさらに primitive な概念として捉えるのが良さそう？ ) 。`createSignal()` 関数によって作成され、`createSignale` が返す getter, setter によってアクセスや更新ができます。 React の `useState()` とは異なり、 1 つ目の返り値は関数であることに注意が必要です。
+Solid のリアクティビティの根幹をなすものです。 React の state に使用感は近いですが別物です。SolidJS ではこの signal を追跡することによって、データが変化したときに DOM の中で変更が必要なノードだけを変更し、 UI を変化させることを可能にしています。
+signal を作成するには `createSignal()` 関数を使います。 `createSignal()` は返り値として getter, setter の 2 つの関数を返します。 React の `useState()` とは異なり、 1 つ目の返り値は関数であることに注意が必要です。
+
 
 ```ts
 const [count, setCound] = createSignal(0);
@@ -40,7 +42,7 @@ createEffect(() => {
 ```
 
 ### Subscriber
-subscriber は、 signal の変化を監視し、 signal が更新されたときに登録された処理をトリガーする役割を持ちます。
+subscriber は、 signal の変化を監視し、 signal が更新されたときに登録された処理 (effect) をトリガーする役割を持ちます。
 
 ### SolidJS のリアクティブシステム
 
