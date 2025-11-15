@@ -2,7 +2,7 @@
 title: "SolidJS のチュートリアルをさらってみた"
 emoji: "🚦"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: []
+topics: [solidjs, javascript, typescript]
 published: false
 ---
 
