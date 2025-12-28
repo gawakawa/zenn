@@ -8,8 +8,7 @@ published: true
 
 ## はじめに
 
-Lean の Unicode 入力って便利ですよね。`\vdash` と入力すると `⊢` に変換されるあれです。
-Lean 以外でもプログラミング中にこのような補完が効くとうれしいかなと思ったので、Neovim の設定で入れました。
+Lean の Unicode 入力って便利ですよね。`\vdash` と入力すると `⊢` に変換されるあれです。Lean 以外でもプログラミング中にこのような補完が効くとうれしいかなと思ったので、Neovim の設定で入れました。
 
 ## 実現したいこと
 
@@ -20,8 +19,7 @@ Lean 以外でもプログラミング中にこのような補完が効くとう
 
 ## 実装
 
-実装の概要について順を追って説明します。
-より良い実装があればコメントで教えてくださるとうれしいです。
+実装の概要について順を追って説明します。より良い実装があればコメントで教えてくださるとうれしいです。
 
 ### 0. 前提
 
@@ -31,17 +29,14 @@ Lean 以外でもプログラミング中にこのような補完が効くとう
 - スニペットエンジンとして LuaSnip を使用
 - LuaSnip を nvim-cmp と連携させて補完にも使用
 
-ちなみに Nix で Neovim を管理する方法については、以下を参考にしました。
-プラグインの依存関係の管理が非常に楽になるのでおすすめです。
+ちなみに Nix で Neovim を管理する方法については、以下を参考にしました。プラグインの依存関係の管理が非常に楽になるのでおすすめです。
 
 - https://zenn.dev/natsukium/articles/b4899d7b1e6a9a
 - https://github.com/asa1984/asa1984.nvim
 
 ### 1. 置換を入れてみる
 
-まず LuaSnip の autosnippet 機能を使って、スニペットの即時展開を実装します。
-Lean の挙動に合わせてスペースで展開が確定するようにしました。
-これにより、`\vdash` と打とうとしたときに `\v` が先に発動してしまうような prefix の競合を防ぐことができます。
+まず LuaSnip の autosnippet 機能を使って、スニペットの即時展開を実装します。Lean の挙動に合わせてスペースで展開が確定するようにしました。これにより、`\vdash` と打とうとしたときに `\v` が先に発動してしまうような prefix の競合を防ぐことができます。
 
 ```lua:luasnip.lua
 local ls = require("luasnip")
@@ -95,10 +90,7 @@ end
 
 ### 4. abbreviations テーブルを Lean の実装に依存させる
 
-ここまででも良いのですが、せっかくなら Lean と全く同じ挙動にしてしまおうと思い、abbreviations テーブルの定義を Lean の実装に依存させることにしました。
-Lean の abbreviation は [vscode-lean4](https://github.com/leanprover/vscode-lean4) リポジトリの `abbreviations.json` に定義されています。
-これを flake の input に追加し、ビルド時に JSON を Lua テーブルに変換します。
-まず flake.nix の inputs に vscode-lean4 を追加します。
+ここまででも良いのですが、せっかくなら Lean と全く同じ挙動にしてしまおうと思い、abbreviations テーブルの定義を Lean の実装に依存させることにしました。Lean の abbreviation は [vscode-lean4](https://github.com/leanprover/vscode-lean4) リポジトリの `abbreviations.json` に定義されています。これを flake の input に追加し、ビルド時に JSON を Lua テーブルに変換します。まず flake.nix の inputs に vscode-lean4 を追加します。
 
 ```nix:flake.nix
 inputs = {
@@ -152,8 +144,7 @@ end
 
 ### 5. `$CURSOR` に対応する
 
-ここまでの実装では一つ問題があります。
-`$CURSOR` を含むエントリの取り扱いです。
+ここまでの実装では一つ問題があります。`$CURSOR` を含むエントリの取り扱いです。
 
 ```json:abbreviations.json
 {
@@ -161,9 +152,7 @@ end
   "floor": "⌊$CURSOR⌋"
 }
 ```
-これは VSCode 拡張で使われる記法で、展開後にカーソルを配置したい位置を示します。
-例えば `\<>` と入力すると `⟨⟩` に展開され、カーソルが括弧の間に配置されます。
-`$CURSOR` を LuaSnip の `insert_node` に変換することで、展開後にカーソルが括弧内に配置されるようにします。
+これは VSCode 拡張で使われる記法で、展開後にカーソルを配置したい位置を示します。例えば `\<>` と入力すると `⟨⟩` に展開され、カーソルが括弧の間に配置されます。`$CURSOR` を LuaSnip の `insert_node` に変換することで、展開後にカーソルが括弧内に配置されるようにします。
 
 ```lua:luasnip.lua
 local i = ls.insert_node
@@ -185,8 +174,6 @@ end
 
 ## まとめ
 
-Lean の abbreviations を Neovim でも使えるようにしました。
-コメントで論理記号を書くときやギリシャ文字を入力したいときに便利なので、ぜひ使ってみてください。
-実装の全体は以下のリポジトリを参照してください。
+Lean の abbreviations を Neovim でも使えるようにしました。コメントで論理記号を書くときやギリシャ文字を入力したいときに便利なので、ぜひ使ってみてください。実装の全体は以下のリポジトリを参照してください。
 
 https://github.com/gawakawa/nvim
