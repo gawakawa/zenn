@@ -27,6 +27,10 @@
               nixos.enable = true;
             };
           };
+          textlintWithRules = pkgs.textlint.withPackages [
+            pkgs.textlint-rule-preset-ja-technical-writing
+            pkgs.textlint-rule-preset-ja-spacing
+          ];
         in
         {
           packages = {
@@ -34,8 +38,9 @@
           };
 
           devShells.default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-              zenn-cli
+            buildInputs = [
+              pkgs.zenn-cli
+              textlintWithRules
             ];
 
             shellHook = ''
@@ -78,6 +83,18 @@
                 ''
                   cd $src
                   markdownlint-cli2 "articles/**/*.md" "books/**/*.md"
+                  mkdir "$out"
+                '';
+
+            textlint =
+              pkgs.runCommandLocal "textlint"
+                {
+                  src = ./.;
+                  nativeBuildInputs = [ textlintWithRules ];
+                }
+                ''
+                  cd $src
+                  textlint "articles/**/*.md" "books/**/*.md"
                   mkdir "$out"
                 '';
           };
