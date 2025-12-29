@@ -31,8 +31,8 @@ Lean の Unicode 入力って便利ですよね。`\vdash` と入力すると `�
 
 ちなみに Nix で Neovim を管理する方法については、以下を参考にしました。プラグインの依存関係の管理が非常に楽になるのでおすすめです。
 
-- [一般構築魔法(Nix)のVimへの応用について](https://zenn.dev/natsukium/articles/b4899d7b1e6a9a)
-- [asa1984/asa1984.nvim](https://github.com/asa1984/asa1984.nvim)
+https://zenn.dev/natsukium/articles/b4899d7b1e6a9a
+https://github.com/asa1984/asa1984.nvim
 
 ### 1. 置換を入れてみる
 
@@ -178,4 +178,4 @@ end
 
 Lean の abbreviations を Neovim でも使えるようにしました。コメントで論理記号を書くときやギリシャ文字を入力したいときに便利なので、ぜひ使ってみてください。実装の全体は以下のリポジトリを参照してください。
 
-<https://github.com/gawakawa/nvim>
+https://github.com/gawakawa/nvim
