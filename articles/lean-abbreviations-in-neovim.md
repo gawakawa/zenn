@@ -36,7 +36,7 @@ https://github.com/asa1984/asa1984.nvim
 
 ### 1. 置換を入れてみる
 
-まず LuaSnip の autosnippet 機能を使って、スニペットの即時展開を実装します。Lean の挙動に合わせてスペースで展開が確定するようにしました。これにより、`\vdash` と打とうとしたときに `\v` が先に発動してしまうような prefix の競合を防ぐことができます。
+まず LuaSnip の autosnippet 機能を使って、スニペットの即時展開を実装します。Lean の挙動に合わせてスペースで展開が確定するようにしました。これにより、`\vdash` を入力しようとしたとき `\v` のスニペットが意図せず展開されてしまうようなことを防げます。
 
 ```lua:luasnip.lua
 local ls = require("luasnip")
@@ -91,7 +91,11 @@ end
 
 ### 4. abbreviations テーブルを Lean の実装に依存させる
 
-ここまででも良いのですが、せっかくなら Lean と全く同じ挙動にしてしまおうと思い、abbreviations テーブルの定義を Lean の実装に依存させることにしました。Lean の abbreviation は [vscode-lean4](https://github.com/leanprover/vscode-lean4) リポジトリの `abbreviations.json` に定義されています。これを flake の input に追加し、ビルド時に JSON を Lua テーブルに変換します。まず flake.nix の inputs に vscode-lean4 を追加します。
+ここまででも良いのですが、せっかくなら Lean と全く同じ挙動を再現しようと思い、abbreviations テーブルの定義を Lean の実装へ依存させることにしました。Lean の abbreviation は以下のファイルで定義されています。
+
+https://github.com/leanprover/vscode-lean4/blob/master/lean4-unicode-input/src/abbreviations.json
+
+これを flake の input に追加し、ビルド時に JSON を Lua テーブルに変換します。まず flake.nix の inputs に vscode-lean4 を追加します。
 
 ```nix:flake.nix
 inputs = {
@@ -145,7 +149,7 @@ end
 
 ### 5. `$CURSOR` に対応する
 
-ここまでの実装では一つ問題があります。`$CURSOR` を含むエントリの取り扱いです。
+ここまでの実装では 1 つ問題があります。`$CURSOR` を含むエントリの取り扱いです。
 
 ```json:abbreviations.json
 {
@@ -154,7 +158,7 @@ end
 }
 ```
 
-これは VSCode 拡張で使われる記法で、展開後にカーソルを配置したい位置を示します。例えば `\<>` と入力すると `⟨⟩` に展開され、カーソルが括弧の間に配置されます。`$CURSOR` を LuaSnip の `insert_node` に変換することで、展開後にカーソルが括弧内に配置されるようにします。
+これは VSCode 拡張で使われる記法であり、展開後にカーソルを配置したい位置を示します。例えば `\<>` と入力すると `⟨⟩` に展開され、カーソルが括弧の間に配置されます。`$CURSOR` を LuaSnip の `insert_node` へ変換すれば、展開後のカーソルが括弧内へ配置されるようになります。
 
 ```lua:luasnip.lua
 local i = ls.insert_node

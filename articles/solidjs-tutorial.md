@@ -12,7 +12,7 @@ SolidJS というフレームワークのチュートリアルを一通りさら
 
 ## 動機
 
-signal という言葉を聞いたことはあったのですが、どんなものなのかよくわかっていなかったので、実際に signal を使ったコードを書いてみて理解を深めようと思いました。軽く調べた感じ、 signal を使うフレームワークは SolidJS の他にも preact や Qwik 等があるようでしたが、一番 signal を全面に押し出しているように見えたので SolidJS に決めました。
+signal という言葉を聞いたことはあったのですが、どんなものなのかよくわかっていなかったので、実際に signal を使ったコードを書いてみて理解を深めようと思いました。軽く調べた感じ、signal を使うフレームワークは SolidJS の他にも preact や Qwik 等があるようでした。その中でも一番 signal を全面に押し出しているように見えた SolidJS を選びました。
 
 ## SolidJS とは
 
@@ -36,7 +36,7 @@ console.log(ocunt()); // 1 を返す
 
 ### Effect
 
-Effect は、 signal の更新をトリガーとして実行される関数です。 React の Effect とはだいぶ違いますね。 `createEffect()` で登録することができます。
+Effect は、 signal の更新をトリガーとして実行される関数です。 React の Effect とはだいぶ違いますね。 `createEffect()` で登録できます。
 
 ```ts
 const [count, setCount] = createSignal(0);
@@ -102,7 +102,7 @@ Solid の大きな特徴はこの fine-grained reactivity です。
 
 ## わからないところ
 
-- 個人的にはコードのトラッキングを行う上で immutablity は捨てたくないです。fine-grained reactivity と pure なロジックを、パフォーマンスを失うことなく実現する夢みたいな方法はないのかなと思いました。
+- 個人的にはコードのトラッキングを行う上で immutablity は捨てたくない。fine-grained reactivity と pure なロジックを、パフォーマンスを失うことなく実現する夢みたいな方法はないのかなと思った。
 
 ## まとめ
 

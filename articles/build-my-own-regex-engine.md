@@ -11,15 +11,19 @@ published: false
 ## 正規表現の微分
 
 今回は正規表現の微分を使って正規表現エンジンを作成します。
-正規表現の微分とは、 正規表現 $R$ の接頭辞 $u$ を除いたときの言語 $S$ を計算するもので、 Brzozowski によって提唱されました^[https://dl.acm.org/doi/10.1145/321239.321249]。
-実装にあたっては、より実装に即したアルゴリズムを提案している Owens ら^[https://www.cambridge.org/core/journals/journal-of-functional-programming/article/regularexpression-derivatives-reexamined/E5734B86DEB96C61C69E5CF3C4FB0AFA#article]の論文を参考にしています。
+正規表現の微分とは、正規表現 $R$ の接頭辞 $u$ を除いたときの言語 $S$ を計算するもので、Brzozowski によって提唱されました[^1]。
+
+[^1]: https://dl.acm.org/doi/10.1145/321239.321249
+[^2]: https://www.cambridge.org/core/journals/journal-of-functional-programming/article/regularexpression-derivatives-reexamined/E5734B86DEB96C61C69E5CF3C4FB0AFA#article
+
+実装にあたっては、より実装に即したアルゴリズムを提案している Owens らの論文を参考にしています[^2]。
 
 ## 実装
 
-そこまで長いコードでもないのですべてここにのせてしまおうと思います。
+そこまで長いコードでもないのですべてここにのせます。
 特にひねったことはせず Brzozowski 微分をそのまま実装に落とし込んでいます。
 言語は Lean を使ったのですが、これは証明つきの正規表現エンジンを自作するという目標があるからです。
-ゆくゆくは証明つきの正規表現エンジンを作りたいと思っているのですが、この実装に Lean で証明をつけられるのかはよくわかっていないので、実装方針自体は変わるかもしれません。
+ゆくゆくは証明つきの正規表現エンジンを作りたいのですが、この実装に Lean で証明をつけられるのかはよくわかっていないので、実装方針自体は変わる可能性があります。
 リポジトリは <https://github.com/gawakawa/regex-engine> です。
 
 ### 微分の定義
