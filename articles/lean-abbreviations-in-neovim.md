@@ -31,8 +31,8 @@ Lean の Unicode 入力って便利ですよね。`\vdash` と入力すると `�
 
 ちなみに Nix で Neovim を管理する方法については、以下を参考にしました。プラグインの依存関係の管理が非常に楽になるのでおすすめです。
 
-- https://zenn.dev/natsukium/articles/b4899d7b1e6a9a
-- https://github.com/asa1984/asa1984.nvim
+- [一般構築魔法(Nix)のVimへの応用について](https://zenn.dev/natsukium/articles/b4899d7b1e6a9a)
+- [asa1984/asa1984.nvim](https://github.com/asa1984/asa1984.nvim)
 
 ### 1. 置換を入れてみる
 
@@ -64,7 +64,8 @@ local autosnippets = {}
 -- Regular snippet（補完メニューに表示）
 table.insert(snippets, s({ trig = "\\vdash", desc = "⊢" }, { t("⊢") }))
 -- Autosnippet（スペースで即時展開）
-table.insert(autosnippets, s({ trig = "\\vdash ", snippetType = "autosnippet" }, { t("⊢") }))
+table.insert(autosnippets,
+  s({ trig = "\\vdash ", snippetType = "autosnippet" }, { t("⊢") }))
 
 ls.add_snippets("all", snippets)
 ls.add_snippets("all", autosnippets)
@@ -152,6 +153,7 @@ end
   "floor": "⌊$CURSOR⌋"
 }
 ```
+
 これは VSCode 拡張で使われる記法で、展開後にカーソルを配置したい位置を示します。例えば `\<>` と入力すると `⟨⟩` に展開され、カーソルが括弧の間に配置されます。`$CURSOR` を LuaSnip の `insert_node` に変換することで、展開後にカーソルが括弧内に配置されるようにします。
 
 ```lua:luasnip.lua
@@ -176,4 +178,4 @@ end
 
 Lean の abbreviations を Neovim でも使えるようにしました。コメントで論理記号を書くときやギリシャ文字を入力したいときに便利なので、ぜひ使ってみてください。実装の全体は以下のリポジトリを参照してください。
 
-https://github.com/gawakawa/nvim
+<https://github.com/gawakawa/nvim>

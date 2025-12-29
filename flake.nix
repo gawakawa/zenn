@@ -19,7 +19,6 @@
       perSystem =
         {
           pkgs,
-          system,
           ...
         }:
         let
@@ -43,6 +42,44 @@
               cat ${mcpConfig} > .mcp.json
               echo "Generated .mcp.json"
             '';
+          };
+
+          checks = {
+            statix =
+              pkgs.runCommandLocal "statix"
+                {
+                  src = ./.;
+                  nativeBuildInputs = [ pkgs.statix ];
+                }
+                ''
+                  cd $src
+                  statix check .
+                  mkdir "$out"
+                '';
+
+            deadnix =
+              pkgs.runCommandLocal "deadnix"
+                {
+                  src = ./.;
+                  nativeBuildInputs = [ pkgs.deadnix ];
+                }
+                ''
+                  cd $src
+                  deadnix --fail .
+                  mkdir "$out"
+                '';
+
+            markdownlint =
+              pkgs.runCommandLocal "markdownlint"
+                {
+                  src = ./.;
+                  nativeBuildInputs = [ pkgs.markdownlint-cli2 ];
+                }
+                ''
+                  cd $src
+                  markdownlint-cli2 "articles/**/*.md" "books/**/*.md"
+                  mkdir "$out"
+                '';
           };
 
           treefmt = {
