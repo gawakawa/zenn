@@ -4,6 +4,10 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     treefmt-nix.url = "github:numtide/treefmt-nix";
     mcp-servers-nix.url = "github:natsukium/mcp-servers-nix";
+    git-hooks-nix = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -14,106 +18,76 @@
         "aarch64-darwin"
       ];
 
-      imports = [ inputs.treefmt-nix.flakeModule ];
+      imports = [
+        inputs.treefmt-nix.flakeModule
+        inputs.git-hooks-nix.flakeModule
+      ];
 
       perSystem =
-        {
-          pkgs,
-          ...
-        }:
+        { config, pkgs, ... }:
         let
+          textlintWithRules = pkgs.textlint.withPackages [
+            pkgs.textlint-rule-preset-ja-technical-writing
+            pkgs.textlint-rule-preset-ja-spacing
+          ];
+
+          ciPackages = [
+            pkgs.zenn-cli
+            pkgs.markdownlint-cli2
+            textlintWithRules
+          ];
+
+          devPackages = ciPackages ++ config.pre-commit.settings.enabledPackages;
+
           mcpConfig = inputs.mcp-servers-nix.lib.mkConfig pkgs {
             programs = {
               nixos.enable = true;
             };
           };
-          textlintWithRules = pkgs.textlint.withPackages [
-            pkgs.textlint-rule-preset-ja-technical-writing
-            pkgs.textlint-rule-preset-ja-spacing
-          ];
         in
         {
           packages = {
+            ci = pkgs.buildEnv {
+              name = "ci";
+              paths = ciPackages;
+            };
+
             mcp-config = mcpConfig;
           };
 
+          pre-commit.settings.hooks = {
+            treefmt.enable = true;
+            statix.enable = true;
+            deadnix.enable = true;
+            actionlint.enable = true;
+            markdownlint = {
+              enable = true;
+              files = "^(README\\.md|articles/.*\\.md|books/.*\\.md)$";
+              entry = "${pkgs.markdownlint-cli2}/bin/markdownlint-cli2";
+            };
+            textlint = {
+              enable = true;
+              files = "^(articles/.*\\.md|books/.*\\.md)$";
+              entry = "${textlintWithRules}/bin/textlint";
+            };
+          };
+
           devShells.default = pkgs.mkShell {
-            buildInputs = [
-              pkgs.zenn-cli
-              textlintWithRules
-            ];
+            buildInputs = devPackages;
 
             shellHook = ''
+              ${config.pre-commit.shellHook}
               cat ${mcpConfig} > .mcp.json
               echo "Generated .mcp.json"
             '';
           };
 
-          checks = {
-            statix =
-              pkgs.runCommandLocal "statix"
-                {
-                  src = ./.;
-                  nativeBuildInputs = [ pkgs.statix ];
-                }
-                ''
-                  cd $src
-                  statix check .
-                  mkdir "$out"
-                '';
-
-            deadnix =
-              pkgs.runCommandLocal "deadnix"
-                {
-                  src = ./.;
-                  nativeBuildInputs = [ pkgs.deadnix ];
-                }
-                ''
-                  cd $src
-                  deadnix --fail .
-                  mkdir "$out"
-                '';
-
-            markdownlint =
-              pkgs.runCommandLocal "markdownlint"
-                {
-                  src = ./.;
-                  nativeBuildInputs = [ pkgs.markdownlint-cli2 ];
-                }
-                ''
-                  cd $src
-                  markdownlint-cli2 "articles/**/*.md" "books/**/*.md"
-                  mkdir "$out"
-                '';
-
-            textlint =
-              pkgs.runCommandLocal "textlint"
-                {
-                  src = ./.;
-                  nativeBuildInputs = [ textlintWithRules ];
-                }
-                ''
-                  cd $src
-                  textlint "articles/**/*.md" "books/**/*.md"
-                  mkdir "$out"
-                '';
-
-            actionlint =
-              pkgs.runCommandLocal "actionlint"
-                {
-                  src = ./.;
-                  nativeBuildInputs = [ pkgs.actionlint ];
-                }
-                ''
-                  cd $src
-                  actionlint .github/workflows/*.yml
-                  mkdir "$out"
-                '';
-          };
-
           treefmt = {
             programs = {
-              nixfmt.enable = true;
+              nixfmt = {
+                enable = true;
+                includes = [ "*.nix" ];
+              };
             };
           };
         };

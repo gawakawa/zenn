@@ -4,7 +4,7 @@ Repository for managing articles and books on Zenn.dev.
 
 ## Directory Structure
 
-```
+```text
 .
 ├── articles/      # Article markdown files
 ├── books/         # Book directories
