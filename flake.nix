@@ -97,6 +97,18 @@
                   textlint "articles/**/*.md" "books/**/*.md"
                   mkdir "$out"
                 '';
+
+            actionlint =
+              pkgs.runCommandLocal "actionlint"
+                {
+                  src = ./.;
+                  nativeBuildInputs = [ pkgs.actionlint ];
+                }
+                ''
+                  cd $src
+                  actionlint .github/workflows/*.yml
+                  mkdir "$out"
+                '';
           };
 
           treefmt = {
