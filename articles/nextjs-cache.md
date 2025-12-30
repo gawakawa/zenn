@@ -6,6 +6,6 @@ topics: [nextjs]
 published: false
 ---
 
-##  はじめに
+## はじめに
 
 Next.js の 4 種類のキャッシュについて実験で確かめながら学んでみたので結果を共有します。
