@@ -48,8 +48,11 @@ inductive Regex : Type where
   | or : Regex → Regex → Regex
   | and : Regex → Regex → Regex
   | compl : Regex → Regex
-  deriving DecidableEq
+```
 
+視認性のためにエイリアスを張っておきます。
+
+```lean
 notation "∅" => Regex.emptySet
 notation "ε" => Regex.epsilon
 infixl:70 " <> " => Regex.concat
