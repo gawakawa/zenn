@@ -1,6 +1,12 @@
 {
   "rules": {
-    "preset-ja-technical-writing": true,
+    "preset-ja-technical-writing": {
+      "sentence-length": {
+        "skipPatterns": [
+          "/\\$\\$[\\s\\S]*?\\$\\$/m"
+        ]
+      }
+    },
     "preset-ja-spacing": {
       "ja-space-between-half-and-full-width": {
         "space": "always"
