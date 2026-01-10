@@ -2,3 +2,5 @@ node_modules
 .DS_Store
 .direnv
 .mcp.json
+.pre-commit-config.yaml
+result
