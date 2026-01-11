@@ -5,18 +5,25 @@ type: "tech" # tech: 技術記事 / idea: アイデア
 topics: []
 published: false
 ---
+
 ## はじめに
+
 MCP サーバーの設定を [mcp-servers-nix](https://github.com/natsukium/mcp-servers-nix) というツールを用いて Nix で管理できるようにしました。mcp-servers-nix については、作者の natsukium さんが[記事](https://zenn.dev/natsukium/articles/f010c1ec1c51b2)をあげているので、詳しくはそちらをご覧ください。
 
 ## 動機
-MCP サーバーの実行形式は使用する MCP サーバーによってまちまちです。例えば、GitHub MCP, Serena MCP, NixOS MCP の 3 つを使う場合、Claude Code 用の MCP サーバー管理ファイルである .mcp.json は以下のようになります。
+
+MCP サーバーの実行形式はまちまちです。例えば、GitHub MCP, Serena MCP, NixOS MCP の 3 つを使う場合、.mcp.json は以下のようになります。
+
 ```json
 
 ```
-uv やら docker やら nix やら command が入り乱れていますね。
+
+uv, docker, nix, command など様々な形式が入り乱れていますね。
 
 ## 設定方法
+
 mcp=servers-nix を使った flake.nix を見ていきます。
+
 ```nix
 {
   inputs = {
@@ -67,4 +74,5 @@ mcp=servers-nix を使った flake.nix を見ていきます。
     };
 }
 ```
-これだけで、
+
+これだけで。
