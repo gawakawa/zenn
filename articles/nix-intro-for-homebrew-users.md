@@ -26,12 +26,8 @@ Nix に興味はあるものの難しそうでなかなか手が出せないと�
 
 ## 動作環境
 
-- machine: Macbook Air
-- chip: Apple M2
-- memory: 8GB
-- storage: 256GB
-- macOS: Tahoe 26.2
-- Homebrew: 5.0.9
+- Macbook Air (Apple M2)
+- macOS Tahoe 26.2
 
 ## やり方
 
