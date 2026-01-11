@@ -8,7 +8,7 @@ published: false
 
 ## はじめに
 
-Nix に興味はあるが、なんか難しそうでなかなか手が出せないという人は多いでしょう。本記事ではそんな Mac ユーザー、とりわけ Homebrew を使ってパッケージを管理している方々のために、**Homebrew を Nix で管理する**方法をご紹介します。この方法であれば Homebrew によるパッケージ管理を残したまま Nix に手軽に入門できます。
+Nix に興味はあるものの難しそうでなかなか手が出せないという人は多いでしょう。本記事ではそんな思いを持つ Mac ユーザー、とりわけ Homebrew を使ってパッケージを管理している方々のために、**Homebrew を Nix で管理する**方法をご紹介します。この方法であれば Homebrew によるパッケージ管理を継続しつつ Nix に手軽に入門できます。
 
 ## 対象読者
 
@@ -196,17 +196,21 @@ sudo darwin-rebuild switch --flake ~/.config/nix-darwin
 
 ## 次にやること
 
-Homebrew を Nix に書いてしばらく経って問題がなければ、次のステップに進んでみましょう。本記事でその内容を詳述することはしませんが、指針だけ軽く書いておきます。
+Homebrew を Nix で管理できるようになったら、次のステップに進んでみましょう。
 
-- Homebrew で管理しているパッケージを nixpkgs のものに置き換えてみる
-- `configuration.nix` をいじってシステム設定を Nix で管理してみる
-- 開発環境構築に `flake.nix` を使ってみる
+- Homebrew で管理しているパッケージを nixpkgs に置き換える
+- Flake で開発環境を構築する
+- dotfiles を Home Manager で管理する
 
-なお、Nix のドキュメントは基本英語ですが、非公式であれば日本語の記事も最近増えてきています。特に、asa1984 さんの記事は網羅的かつ非常にわかりやすいのでおすすめです。
+日本語の解説記事も充実してきているので、参考にしてみてください。
 
 https://zenn.dev/asa1984/articles/nixos-is-the-best
-https://zenn.dev/asa1984/books/nix-introduction
-https://zenn.dev/asa1984/books/nix-hands-on
+https://zenn.dev/comamoca/articles/2025-02-09-start-to-use-nix-flake-by-one-file
+https://syu-m-5151.hatenablog.com/entry/2025/12/18/111500
+
+## まとめ
+
+本記事では、Homebrew を Nix で管理する方法を紹介しました。nix-darwin を使えば、既存の Homebrew 環境を維持したまま Nix の宣言的な設定管理を試すことができます。この記事をきっかけに Nix 導入を試してみる Homebrew ユーザーが増えてくれると嬉しいです。
 
 ## 参考
 
@@ -214,4 +218,4 @@ https://lix.systems/
 https://github.com/nix-darwin/nix-darwin?tab=readme-ov-file
 https://mynixos.com/nix-darwin/options/homebrew
 
-[^1]: この方法で実現できるのは、Homebrew の設定を Nix の設定ファイル上に書き起こせることだけです。Nix の掲げる 3 つの特徴 **再現性（Reproducible）**、**宣言性（Declarative）**、**信頼性（Reliable）** のうち、宣言性しか満たせていません。再現性、信頼性も含む Nix の威力を体感したい場合は、さらに設定を進める必要があります。
+[^1]: この方法で実現できるのは、Homebrew の設定を Nix の設定ファイル上に書き起こせることだけです。Nix の掲げる 3 つの特徴 **再現性 (Reproducible)**、**宣言性 (Declarative)**、**信頼性 (Reliable)** のうち、宣言性しか満たせていません。再現性、信頼性も含む Nix の威力を体感したい場合は、さらに設定を進める必要があります。
