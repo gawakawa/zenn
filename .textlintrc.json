@@ -5,6 +5,9 @@
         "skipPatterns": [
           "/\\$\\$[\\s\\S]*?\\$\\$/m"
         ]
+      },
+      "ja-no-mixed-period": {
+        "allowPeriodMarks": [":::"]
       }
     },
     "preset-ja-spacing": {
