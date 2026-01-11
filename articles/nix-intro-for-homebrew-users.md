@@ -22,7 +22,7 @@ Nix に興味はあるが、なんか難しそうでなかなか手が出せな�
 
 - Homebrew の管理は継続
 - 既存の設定には一切影響なし
-- Nix のメリットは薄め ( Nix の威力を体感したいのであればさらに設定を進める必要がある )
+- Nix のメリットは薄め[^1]
 
 ## 動作環境
 
@@ -43,7 +43,7 @@ Nix に興味はあるが、なんか難しそうでなかなか手が出せな�
 curl -sSf -L https://install.lix.systems/lix | sh -s -- install
 ```
 
-インストール中に Flake を有効化するか聞かれますが、Yes と回答してください。Flake は Nix コードをパッケージングするための再現可能な単位で、`flake.lock` によって依存関係のバージョンを固定することで環境の再現性を保証する機能です。experimental feature という扱いですが、デファクトスタンダードになっているので有効化しておきましょう。
+インストール中に Flake を有効化するか聞かれますが、Yes と回答してください。Flake は `flake.lock` で依存関係を固定し、環境の再現性を保証する機能です。experimental feature ですが、デファクトスタンダードになっているので有効化しておきましょう。
 インストールが完了したら、別ターミナルを立ち上げて確認します。
 
 ```bash
@@ -54,10 +54,10 @@ nix --version
 
 ### 2. nix-darwin を導入する
 
-次に、nix-darwin のインストールを行います。nix-darwin は MacOS を宣言的に管理するためのツールです。
+次に、nix-darwin のインストールを行います。nix-darwin は macOS を宣言的に管理するためのツールです。
 こちらも [nix-darwin の公式リポジトリ](https://github.com/nix-darwin/nix-darwin?tab=readme-ov-file#getting-started)の説明に沿って設定を進めてください。なお、ここでも Flake ベースの設定と Channel ベースの設定の 2 通りが書かれていますが、Flake ベースの設定を選択しましょう。
 
-1. `flake.nix` を作成する
+#### 1. `flake.nix` を作成する
 
 ```bash
 sudo mkdir -p /etc/nix-darwin
@@ -69,7 +69,7 @@ nix flake init -t nix-darwin/master
 sed -i '' "s/simple/$(scutil --get LocalHostName)/" flake.nix
 ```
 
-1. `nix-darwin` をインストールする
+#### 2. `nix-darwin` をインストールする
 
 ```bash
 sudo nix run "nix-darwin/master#darwin-rebuild" -- switch
@@ -79,25 +79,35 @@ sudo nix run "nix-darwin/master#darwin-rebuild" -- switch
 zsh を使っている場合 `#` が特殊文字として扱われるので `nix-darwin/master#darwin-rebuild` をダブルクォーテーションで囲ってください。nix-darwin の README に記載されているコマンドをコピペして実行するとエラーになるので気をつけてください。
 :::
 
-1. nix-darwin の設定をシステムに適用する
+#### 3. nix-darwin の設定をシステムに適用する
 
-まずはシステムにこれまでの変更を反映させます。
+これまでの変更をシステムに反映させます。
 
 ```bash
 sudo darwin-rebuild switch
 ```
 
+次に、`configuration.nix` を作成し、`flake.nix` を編集して、flake の `inputs` を設定ファイルで利用できるようにします。
+
+`/etc/nix-darwin/configuration.nix` を作成し、以下の内容を記述します。
+
 ```nix
-# in flake.nix
+# in /etc/nix-darwin/configuration.nix
+{ pkgs, lib, inputs, ... }:
+# inputs.self, inputs.nix-darwin, inputs.nixpkgs にここからアクセスできる
+{
+  # ここに設定を記述していく
+}
+```
+
+次に `/etc/nix-darwin/flake.nix` を編集して、`specialArgs` を追加します。
+
+```nix
+# in /etc/nix-darwin/flake.nix
 nix-darwin.lib.darwinSystem {
   modules = [ ./configuration.nix ];
   specialArgs = { inherit inputs; };
 }
-```
-
-```nix
-# in configuration.nix
-{ pkgs, lib, inputs }:
 ```
 
 ### 3. 設定ファイルをユーザーディレクトリにコピーする ( オプション )
@@ -105,7 +115,7 @@ nix-darwin.lib.darwinSystem {
 せっかく宣言的なパッケージ管理をするのですから git 管理でバージョン管理したいです。しかし `/etc/` にあるファイルを git 管理したくはないのでホームディレクトリ以下に設定ファイルを移行します。なお、 `/etc/nix-darwin/` で設定しても特に問題はないのでこの手順はスキップしても構いません。
 
 ```bash
-mkdir ~/.config
+mkdir -p ~/.config
 cp -r /etc/nix-darwin ~/.config
 cd ~/.config/nix-darwin
 git init
@@ -180,11 +190,13 @@ sudo darwin-rebuild switch
 sudo darwin-rebuild switch --flake ~/.config/nix-darwin
 ```
 
-これで、Homebrew が Nix の管理下に入りました。今後は `configuration.nix` の `brews` や `casks` を編集して `sudo darwin-rebuild switch` を実行すれば、パッケージの追加や削除ができます。なお、従来通り `brew` コマンドでも同様のことは可能ですが、`configuration.nix` に自動でパッケージが追加されることはありません。宣言性を維持したい場合は `configuration.nix` の編集で管理することをお勧めします。
+これで、Homebrew が Nix の管理下に入りました。今後は `configuration.nix` の `brews` や `casks` を編集して `sudo darwin-rebuild switch` を実行すれば、パッケージの追加や削除ができます。
+
+なお、従来通り `brew` コマンドでもパッケージの追加や削除は可能ですが、`configuration.nix` に自動でパッケージが追加されることはありません。宣言性を維持したい場合は `configuration.nix` の編集で管理することをお勧めします。
 
 ## 次にやること
 
-この方法でできることはあくまで Homebrew の設定を Nix の設定ファイル上に書き起こせることだけです。Nix の掲げる 3 つの特徴 Reproducible, Declarative, Reliable のうち、Declarative しか満たせていません。Homebrew を Nix に書いてしばらく経って問題がなければ、次のステップに進んでみましょう。本記事でその内容を詳述することはしませんが、指針だけ軽く書いておきます。
+Homebrew を Nix に書いてしばらく経って問題がなければ、次のステップに進んでみましょう。本記事でその内容を詳述することはしませんが、指針だけ軽く書いておきます。
 
 - Homebrew で管理しているパッケージを nixpkgs のものに置き換えてみる
 - `configuration.nix` をいじってシステム設定を Nix で管理してみる
@@ -201,3 +213,5 @@ https://zenn.dev/asa1984/books/nix-hands-on
 https://lix.systems/
 https://github.com/nix-darwin/nix-darwin?tab=readme-ov-file
 https://mynixos.com/nix-darwin/options/homebrew
+
+[^1]: この方法で実現できるのは、Homebrew の設定を Nix の設定ファイル上に書き起こせることだけです。Nix の掲げる 3 つの特徴 **再現性（Reproducible）**、**宣言性（Declarative）**、**信頼性（Reliable）** のうち、宣言性しか満たせていません。再現性、信頼性も含む Nix の威力を体感したい場合は、さらに設定を進める必要があります。
