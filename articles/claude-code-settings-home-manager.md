@@ -8,6 +8,8 @@ published: false
 
 ## はじめに
 
+Claude Code のユーザー設定を Home Manager で宣言的に管理する方法を紹介します。他の dotfiles 管理にも応用できるので参考にしてみてください。
+
 ## 前提知識
 
 ### Claude Code のスコープシステム
@@ -91,6 +93,8 @@ https://zenn.dev/asa1984/articles/nixos-is-the-best#home-manager
 `home-manager switch` を実行すると、`~/.claude/` 配下に設定ファイルがシンボリックリンクとして配置されます。
 
 ## まとめ
+
+Home Manager の `home.file` を使って Claude Code のユーザー設定を管理する方法を紹介しました。`.claude/` 以外の dotfiles もこの方法を使ってどんどん Nix で設定していきましょう。良い Nix ライフを！
 
 ## 参考
 

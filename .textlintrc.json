@@ -8,7 +8,8 @@
       },
       "ja-no-mixed-period": {
         "allowPeriodMarks": [":::"]
-      }
+      },
+      "no-exclamation-question-mark": false
     },
     "preset-ja-spacing": {
       "ja-space-between-half-and-full-width": {
