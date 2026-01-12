@@ -22,7 +22,9 @@ Home Manager は Nix を使ってユーザー環境を宣言的に管理する�
 
 ## 設定
 
-本記事では Home Manager の設定を `home.nix` で管理していることを前提とします。
+本記事では Home Manager が導入済みであることを前提とします。まだ導入していない方は以下の記事を参考に設定してみてください。
+https://zenn.dev/asa1984/articles/nixos-is-the-best#home-manager
+また、上記記事にならって Home Manager の設定は `home.nix` で管理しているものとして話を進めます。
 
 前節で紹介した `home.file` オプションを使って、Claude Code の設定ファイルを `~/.claude/` 配下にシンボリックリンクとして配置します。完成形のディレクトリ構造のイメージは以下のようになります。
 
