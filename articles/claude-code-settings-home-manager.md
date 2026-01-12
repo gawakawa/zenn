@@ -24,13 +24,13 @@ Home Manager は Nix を使ってユーザー環境を宣言的に管理する�
 
 本記事では Home Manager の設定を `home.nix` で管理していることを前提とします。
 
-前節で紹介した `home.file` オプションを使って、Claude Code の設定ファイルを `~/.claude/` 配下にシンボリックリンクとして配置します。完成形のディレクトリ構造は以下のようになります。
+前節で紹介した `home.file` オプションを使って、Claude Code の設定ファイルを `~/.claude/` 配下にシンボリックリンクとして配置します。完成形のディレクトリ構造のイメージは以下のようになります。
 
 ```bash
 .
-├── home.nix
-└── claude/
-    ├── default.nix
+├── home.nix        # Home Manager のエントリーポイント
+└── claude/         # Claude Code 設定ファイル群
+    ├── default.nix # Claude Code 設定用モジュール
     ├── settings.json
     ├── CLAUDE.md
     ├── statusline.sh
