@@ -16,6 +16,70 @@ published: false
 
 ## 設定
 
+Home Manager の `home.file` オプションを使って、Claude Code の設定ファイルを `~/.claude/` 配下にシンボリックリンクとして配置します。完成形のディレクトリ構造は以下のようになります。
+
+```bash
+.
+├── home.nix
+└── claude/
+    ├── default.nix
+    ├── settings.json
+    ├── CLAUDE.md
+    ├── statusline.sh
+    ├── agents/
+    ├── skills/
+    ├── rules/
+    └── commands/
+```
+
+`claude/default.nix` で `home.file` を使い、ソースファイルと配置先のマッピングを定義します。
+
+```nix
+# claude/default.nix
+{
+  home.file = {
+    ".claude/settings.json".source = ./settings.json;
+    ".claude/CLAUDE.md".source = ./CLAUDE.md;
+    ".claude/agents" = {
+      source = ./agents;
+      recursive = true;
+    };
+    ".claude/skills" = {
+      source = ./skills;
+      recursive = true;
+    };
+    ".claude/rules" = {
+      source = ./rules;
+      recursive = true;
+    };
+    ".claude/commands" = {
+      source = ./commands;
+      recursive = true;
+    };
+    ".claude/statusline.sh" = {
+      source = ./statusline.sh;
+      executable = true;
+    };
+  };
+}
+```
+
+ディレクトリの場合は `recursive = true` で中身を再帰的にリンクし、スクリプトには `executable = true` で実行権限を付与します。
+
+`home.nix` でこのモジュールを import すれば設定完了です。
+
+```nix
+# home.nix
+{ ... }:
+{
+  imports = [
+    ./claude
+  ];
+}
+```
+
+`home-manager switch` を実行すると、`~/.claude/` 配下に設定ファイルがシンボリックリンクとして配置されます。
+
 ## まとめ
 
 ## 参考
