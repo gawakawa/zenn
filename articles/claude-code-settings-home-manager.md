@@ -46,8 +46,7 @@ https://zenn.dev/asa1984/articles/nixos-is-the-best#home-manager
 
 `claude/default.nix` で `home.file` を使い、ソースファイルと配置先のマッピングを定義します。
 
-```nix
-# claude/default.nix
+```nix:claude/default.nix
 {
   home.file = {
     ".claude/settings.json".source = ./settings.json;
@@ -80,8 +79,7 @@ https://zenn.dev/asa1984/articles/nixos-is-the-best#home-manager
 
 `home.nix` でこのモジュールを import すれば設定完了です。
 
-```nix
-# home.nix
+```nix:home.nix
 { ... }:
 {
   imports = [

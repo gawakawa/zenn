@@ -87,8 +87,7 @@ sudo darwin-rebuild switch
 
 `/etc/nix-darwin/configuration.nix` を作成し、以下の内容を記述します。
 
-```nix
-# in /etc/nix-darwin/configuration.nix
+```nix:configuration.nix
 { pkgs, lib, inputs, ... }:
 # inputs.self, inputs.nix-darwin, inputs.nixpkgs にここからアクセスできる
 {
@@ -98,8 +97,7 @@ sudo darwin-rebuild switch
 
 次に `/etc/nix-darwin/flake.nix` を編集して、`specialArgs` を追加します。
 
-```nix
-# in /etc/nix-darwin/flake.nix
+```nix:flake.nix
 nix-darwin.lib.darwinSystem {
   modules = [ ./configuration.nix ];
   specialArgs = { inherit inputs; };
@@ -125,8 +123,7 @@ git init
 
 `configuration.nix` を開いて、以下の内容を貼り付けてください。ユーザー名に mac で設定しているユーザー名を指定し、`brews`, `casks` に Homebrew で管理しているパッケージを列挙していきます。
 
-```nix
-# in configuration.nix
+```nix:configuration.nix
 { pkgs, lib, ... }:
 {
   system = {
