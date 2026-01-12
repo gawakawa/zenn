@@ -5,3 +5,28 @@ type: "tech" # tech: 技術記事 / idea: アイデア
 topics: [nix, claudecode, claude]
 published: false
 ---
+
+## はじめに
+
+## 前提知識
+
+### Claude Code のスコープシステム
+
+### Home Manager
+
+## 設定
+
+## まとめ
+
+## 参考
+
+- Claude Code の設定方法の公式マニュアル
+https://code.claude.com/docs/en/settings
+
+- Home Manager の `home.file` についてのマニュアル
+https://nix-community.github.io/home-manager/options.xhtml#opt-home.file
+
+- Home Manager の設定方法について書かれているユーザー記事
+https://zenn.dev/trifolium/articles/642043cbae5f21
+https://zenn.dev/kuu/articles/20250204_introduce-home-manager
+https://zenn.dev/asa1984/articles/nixos-is-the-best
