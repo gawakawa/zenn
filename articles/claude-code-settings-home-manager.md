@@ -12,7 +12,13 @@ published: false
 
 ### Claude Code のスコープシステム
 
+Claude Code の設定ファイルには複数のスコープがあります。例えば設定ファイルを `~/.claude/` に配置すると全プロジェクトにその設定が適用され、`<project-root>/.claude/` に配置するとそのプロジェクトにのみ適用されます。
+本記事では前者のユーザースコープの設定を Home Manager で管理します。
+
 ### Home Manager
+
+Home Manager は Nix を使ってユーザー環境を宣言的に管理するツールです。パッケージのインストールや dotfiles の配置を Nix の設定ファイルで一元管理できます。
+本記事では Home Manager の `home.file` オプションを使い、Claude Code の設定ファイルをホームディレクトリ配下にシンボリックリンクとして配置します。
 
 ## 設定
 
