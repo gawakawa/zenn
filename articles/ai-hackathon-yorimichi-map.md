@@ -3,7 +3,7 @@ title: "yorimichi-map"
 emoji: "🚗"
 type: "idea"
 topics: [gch4]
-published: false
+published: true
 ---
 
 ## 1. プロジェクト概要
