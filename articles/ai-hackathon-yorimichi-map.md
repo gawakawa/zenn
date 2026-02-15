@@ -1,6 +1,6 @@
 ---
 title: "yorimichi-map"
-emoji: "🗺️"
+emoji: "🚗"
 type: "idea"
 topics: [gch4]
 published: false
@@ -30,4 +30,4 @@ published: false
 
 ## リポジトリ
 
-https://github.com/USERNAME/REPO
+https://github.com/gawakawa/yorimichi-map
