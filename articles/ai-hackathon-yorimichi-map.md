@@ -1,5 +1,5 @@
 ---
-title: "yorimichi-map"
+title: "寄り道マップ — 「どこか寄りたい」にAIが応える"
 emoji: "🚗"
 type: "idea"
 topics: [gch4]
