@@ -6,6 +6,12 @@ topics: [gch4]
 published: true
 ---
 
+:::message
+この記事は第 4 回 Agentic AI Hackathon with Google Cloud の成果物です。
+:::
+
+https://zenn.dev/hackathons/google-cloud-japan-ai-hackathon-vol4
+
 ## 1. プロジェクト概要
 
 ### 対象ユーザー
