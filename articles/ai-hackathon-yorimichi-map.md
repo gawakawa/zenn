@@ -76,122 +76,15 @@ Gemini が「スポット検索」と「ルート計算」の 2 つのツール�
 
 ユーザーのリクエストは以下の流れで処理されます。
 
-1. ブラウザからフロントエンド（React）にアクセス
-1. フロントエンドがバックエンド（Django）の REST API を呼び出す
-1. バックエンドが Gemini 2.5 Pro に問い合わせる
-1. Gemini が状況に応じて Places API や Routes API を自動的に呼び出す
+1. ブラウザからフロントエンドにアクセス
+1. フロントエンドがバックエンドに問い合わせる
+1. バックエンドが Gemini 2.5 Pro でユーザーの要望を解釈
+1. バックエンドが Google Maps API を呼び出す
 1. 結果がフロントエンドに返され、地図上にルートが表示される
 
 ## 3. デモ動画
 
 @[youtube](LANrWb7AK9c)
-
-## 4. 使用技術
-
-### フロントエンド
-
-| 技術 | バージョン | 用途 |
-| ------ | --------- | ------ |
-| React | 19 | UI フレームワーク |
-| TypeScript | 5.9 | 型安全な開発 |
-| Vite (rolldown-vite) | 7.2 | Rust ベースの高速バンドラ |
-| React Compiler | 1.0 | 自動メモ化 |
-| TanStack Query | 5 | データフェッチ・キャッシュ管理 |
-| Leaflet + react-leaflet | 1.9 / 5.0 | インタラクティブ地図 |
-| Tailwind CSS | 4 | ユーティリティファースト CSS |
-| oxlint | - | 型情報を活用した高速 Linter |
-| Vitest | 4 | テストフレームワーク |
-
-### バックエンド
-
-| 技術 | バージョン | 用途 |
-| ------ | --------- | ------ |
-| Python | 3.13 | ランタイム |
-| Django | 6 | Web フレームワーク |
-| Django REST Framework | 3.16 | REST API 構築 |
-| drf-spectacular | 0.29 | OpenAPI ドキュメント自動生成 |
-| Vertex AI SDK | - | Gemini 2.5 Pro との連携 |
-| Google Maps Routes API v2 | - | ルート計算・交通情報・料金算出 |
-| Google Maps Places API (New) | - | スポット検索・評価情報取得 |
-| gunicorn | 23 | WSGI サーバー |
-| uv | - | 高速パッケージマネージャー |
-
-### インフラ
-
-| 技術 | 用途 |
-| ------ | ------ |
-| Google Cloud Run | フロントエンド・バックエンドのコンテナ実行 |
-| Artifact Registry | Docker イメージの管理 |
-| Secret Manager | API キーの安全な管理 |
-| Vertex AI | Gemini モデルのホスティング |
-| Workload Identity Federation | GitHub Actions からの OIDC 認証 |
-| Cloud Monitoring & Alerting | 監視・アラート |
-| OpenTofu (Terraform) | Infrastructure as Code |
-| Cloudflare | DNS 管理・カスタムドメイン |
-
-### 開発環境
-
-| 技術 | 用途 |
-| ------ | ------ |
-| Nix Flakes | 再現可能な開発環境の構築 |
-| direnv | ディレクトリ移動で自動的に環境をロード |
-| treefmt | 全ファイルタイプの統一フォーマッタ |
-| GitHub Actions | CI/CD（変更検知によるコンポーネント単位の実行） |
-| pre-commit hooks | コミット時の自動チェック |
-
-## 5. 実装品質と拡張性
-
-### Gemini Automatic Function Calling による自律的な API 連携
-
-本アプリの中核は **Vertex AI Gemini 2.5 Pro の Automatic Function Calling** です。
-
-Gemini に「スポット検索」と「ルート計算」の 2 つの関数を登録しています。
-AI 自身がどのタイミングでどの API を呼ぶべきかを判断し、自動実行します。
-
-新しいツールを追加する際も、関数定義を登録するだけで済みます。
-AI が自動的に活用を開始するため、**機能拡張のコストが極めて低い**設計です。
-
-暴走防止のため、1 リクエストあたりの Function Call 上限を 5 回に設定しています。
-また、会話履歴は直近 10 メッセージのみを Gemini に送信するよう制御しています。
-
-### Infrastructure as Code による再現可能なインフラ
-
-インフラは **OpenTofu（Terraform）** で完全にコード管理しています。
-
-Cloud Run や Secret Manager などの Google Cloud リソースをすべて IaC で定義しています。
-そのため、環境の再構築やスケールアウトが容易です。
-
-### Google Maps ディープリンクによるシームレスな UX
-
-ルート確定時に Google Maps のディープリンク URL を自動生成します。
-ワンタップで Google マップアプリを起動できます。
-
-ユーザー入力の地名に対しては、サニタイズ処理を実装しています。
-パイプ文字の除去や 200 文字以内の長さ制限により、セキュリティと信頼性を確保しています。
-
-### Gemini API のレート制限対策
-
-Vertex AI の Gemini API はリクエストが集中すると `429 ResourceExhausted` エラーを返します。
-
-これに対し**指数バックオフ付きリトライ**を実装しました。
-1 秒、2 秒、4 秒と間隔を空けて再試行します。
-3 回リトライしても解消しない場合は、ユーザーにわかりやすいエラーメッセージを返します。
-
-### リアルタイム交通情報の活用
-
-Routes API への問い合わせ時、**出発時刻を「現在時刻 + 5 分後」** に設定しています。
-ルート確認からナビ開始までの操作時間を考慮した設計です。
-実際に出発するタイミングに近い交通状況を反映したルートを計算します。
-
-### CI/CD と開発環境の整備
-
-**Nix Flakes + direnv** により、再現可能な開発環境を実現しています。
-開発者はディレクトリに移動するだけで、必要なツールが自動的にロードされます。
-
-**GitHub Actions** では、変更検知に基づいてコンポーネント単位で CI/CD を実行します。
-**pre-commit hooks** により、ruff・oxlint・statix 等でコード品質を自動チェックしています。
-
-**drf-spectacular** による OpenAPI ドキュメントの自動生成で、フロント・バック間の連携を効率化しています。
 
 ## リポジトリ
 
