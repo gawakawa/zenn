@@ -22,7 +22,7 @@ published: false
 
 ## 2. システムアーキテクチャ
 
-![アーキテクチャ図](/images/yorimichi-map/architecture.png)
+![アーキテクチャ図](/images/ai-hackathon-yorimichi-map/architecture.png)
 
 ## 3. デモ動画
 
