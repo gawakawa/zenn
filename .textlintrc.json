@@ -2,9 +2,7 @@
   "rules": {
     "preset-ja-technical-writing": {
       "sentence-length": {
-        "skipPatterns": [
-          "/\\$\\$[\\s\\S]*?\\$\\$/m"
-        ]
+        "skipPatterns": ["/\\$\\$[\\s\\S]*?\\$\\$/m"]
       },
       "ja-no-mixed-period": {
         "allowPeriodMarks": [":::"]
